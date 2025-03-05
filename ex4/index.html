@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <title>Mini Blog</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+            <h1>{CODE WALL}</h1>
+            <div>
+               
+            <a class="navbar-brand" href="#" id="listlink">My Blogs</a>
+        </div>
+        <div>
+
+            <a class="navbar-brand" href="#" id="loginlink">Login</a>
+
+        </div>
+        <div>
+            <a class="navbar-brand" href="#" id="Signlink">Sign Up</a>
+
+        </div>
+
+    </nav>
+    <div>
+    <h1>Your blog Posts</h1>
+    <button id="addblog">Add New Post</button>
+</div>
+
+
+
+    <div class="container mt-4" id="content">
+       
+    </div>
+    <script src="blog.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded',function(){
+        const blog = new Blog();
+        document.getElementById(`loginlink`).addEventListener("click",function(event) {
+            event.preventDefault();
+            loadLoginFORM();
+        });
+        document.getElementById(`Signlink`).addEventListener("click",function(event) {
+            event.preventDefault();
+            loadSignupFORM();
+        });
+        document.getElementById(`listlink`).addEventListener("click",function(event) {
+            event.preventDefault();
+            displayPosts();
+        });
+        document.getElementById(`addblog`).addEventListener("click",function(event) {
+            event.preventDefault();
+            addPosts();
+        });       
+
+        function loadLoginFORM(){
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML=`
+                 <h2>Login</h2>
+                     <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="loginEmail" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="loginEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label">Password:</label>
+                        <input type="password" class="form-control" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            `;
+             document.getElementById('loginForm').addEventListener('submit',function(event){
+                event.preventDefault();
+                const email=document.getElementById('loginEmail').value;
+                const password=document.getElementById('loginPassword').value;
+                let user= blog.connexion(email,password);
+             if(user){
+                 alert("connected ");
+                 displayPosts();
+
+             }else{
+                alert("Invalid email or password ");
+             }
+
+        });
+        }
+        function loadSignupFORM(){
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML=`
+                 <h2>create account</h2>
+                     <form id="signupForm">
+                    <div class="mb-3">
+                        <label for="signupName" class="form-label">Name:</label>
+                        <input type="text" class="form-control" id="signupName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="signupEmail" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="signupEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="signupPassword" class="form-label">Password:</label>
+                        <input type="password" class="form-control" id="signupPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign up</button>
+                </form>
+            `;
+             document.getElementById('signupForm').addEventListener('submit',function(event){
+                event.preventDefault();
+                const nom=document.getElementById('signupName').value;
+                const email=document.getElementById('signupEmail').value;
+                const password=document.getElementById('signupPassword').value;
+      
+                let succes = true;
+             if(blog.inscription(nom,email,password)){
+                 alert("user created , now log IN ");
+                 loadLoginFORM();
+
+             }else{
+                alert("email adress existes");
+             }
+
+        });
+}
+        function displayPosts(){
+            const contentDiv = document.getElementById('content');
+            const posts= blog.posts;
+            //blog.listerposts()
+            if(posts.length===0){
+                contentDiv.innerHTML ='<p>No posts are available</p>'
+                return;
+            }
+            let postsHtml='<h2>Posts</h2>';
+            posts.forEach(post => {
+                    const author =blog.users.find(user =>user.id === post.authorid);
+                    postsHtml+=`
+                    <div class="card mb-3">
+                        <div class="card-body">
+                    <h5 class="card-title">${post.title}</h5>
+                    <p class="card-text">${post.Description}</p>
+                    </div>
+                    </div>
+                    `;                    
+            });
+            contentDiv.innerHTML=postsHtml;
+
+        } 
+        function addPosts(){
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML=`
+                 <h2>Your Post</h2>
+                     <form id="postForm">
+                        <button type="button" id="closeForm" class="btn-close" aria-label="Fermer"></button>
+                    <div class="mb-3">
+                    
+                        <label for="titlePost" class="form-label">TITLE:</label>
+                        <input type="text" class="form-control" id="titlePost" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="DescriptionPost" class="form-label">Description:</label>
+                        <input type="text" class="form-control" id="DescriptionPost" required>
+                    </div>
+
+                       <div class="mb-3">
+                <label for="authorName" class="form-label">Author Name:</label>
+                <input type="text" class="form-control" id="authorName" required>
+            </div>
+
+                    <button type="submit" class="btn btn-primary">Post</button>
+                </form>
+            `;
+            document.getElementById('closeForm').addEventListener('click', function() {
+        contentDiv.innerHTML = ''; 
+    });
+             document.getElementById('postForm').addEventListener('submit',function(event){
+                event.preventDefault();
+                const title=document.getElementById('titlePost').value;
+                const Description=document.getElementById('DescriptionPost').value;
+                const nom = document.getElementById('authorName').value;
+                //let succes = true;
+                console.log("Users in the system:", this.users);
+
+                let post= blog.newpost(title,Description,nom);
+             if(post){
+                 alert("POST created =>seePosts");
+                 displayPosts(); 
+
+             }else{
+                alert("error occured");
+             }
+
+        });
+}
+        });
+    </script>
+</body>
+</html>
