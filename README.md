@@ -1,6 +1,8 @@
                      Atelier2    mini rapport
 Exercice 1 :
 class voiture ,hundai et ford avec les contructeurs des objets et notion d'heritage 
+
+
 Exercice 2 :
 objet native Etudiant et professeur 
 avec tri des etudiant utilisant localCompare 
@@ -18,11 +20,11 @@ Exercice 4 :
 	   
 creation des class Blog,User,Postes avec les constructeures qui  font initialiser les objets .
 
-avec l'utilisation du toJson() pour convertir un objet en JSON
-avec l'utilisation du FromJson() pour convertir du JSON  en objet avec JSON.parse(json)
+*avec l'utilisation du toJson() pour convertir un objet en JSON
+*avec l'utilisation du FromJson() pour convertir du JSON  en objet avec JSON.parse(json)
 
-la gestion des utilisateures et postes dans localstorage avec les deux methodes :
-  convertir en object 
+*la gestion des utilisateures et postes dans localstorage avec les deux methodes :
+  *convertir en object 
     saveblog(cle,classtype){
     let data= localStorage.getItem(cle);
     if(data){
@@ -32,7 +34,7 @@ la gestion des utilisateures et postes dans localstorage avec les deux methodes 
     return [];
       }
 
-   convertir to JSON 
+   *convertir to JSON 
     savedata(cle,data){localStorage.setItem(cle,JSON.stringify(data));}
 	  
 
